@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>meowd me</title>
+  <link rel="icon" href="assets/grumpy-cat.svg?v=2" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="welcome.css?v=3">
+  <script type="module">
+    import { preference, setLanguage, tr } from "./i18n.js?v=5";
+    setLanguage(preference("language", "fa"));
+    document.title = "meowd me";
+    document.documentElement.dataset.theme = preference("theme", "dark");
+    document.documentElement.dataset.motion = preference("motion", "playing");
+    for (const node of document.querySelectorAll("[data-i18n]")) node.textContent = tr(node.textContent);
+  </script>
+</head>
+<body class="welcome">
+  <main class="welcome-scene">
+    <div class="cat-portrait" aria-hidden="true">
+      <span class="cat-shadow"></span>
+      <img class="welcome-cat" src="assets/grumpy-cat.svg?v=2" width="240" height="240" alt="">
+      <svg class="temper" viewBox="0 0 20 20" fill="none" stroke="#99415d" stroke-width="2.6">
+        <path d="M2 7h4V3m7-2v5h5m1 7h-5v5m-7 1v-5H1"/>
+      </svg>
+    </div>
+    <div class="welcome-copy">
+      <h1 lang="en" dir="ltr"><span class="sr-only">meowd me</span><svg class="wordmark" viewBox="0 0 50 7" aria-hidden="true" focusable="false" shape-rendering="crispEdges">
+          <use href="assets/wordmark.svg#brand" fill="currentColor"/>
+          <use class="wordmark-accent" href="assets/wordmark.svg#accent"/>
+        </svg></h1>
+      <p class="cat-line" data-i18n>اخمام مادرزادیه. حالِ تو چطوره؟</p>
+      <a class="enter-studio" href="studio.html"><span data-i18n>ورود به تحلیل چهره</span><span aria-hidden="true" class="enter-arrow">←</span></a>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0c19">
+  <link rel="icon" href="assets/grumpy-cat.svg?v=2" type="image/svg+xml">
+  <title>meowd me | تحلیل حالت چهره</title>
+  <link rel="stylesheet" href="styles.css?v=25">
+  <script defer src="assets/vendor/ort/ort.wasm.min.js"></script>
+  <script type="module" src="app.js?v=22"></script>
+  <script type="module" src="pixels.js?v=9"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content" data-i18n>رفتن به محتوای اصلی</a>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="identity" href="./" dir="ltr" lang="en">
+        <img src="assets/grumpy-cat.svg?v=2" width="42" height="42" alt="">
+        <span class="sr-only">meowd me</span>
+        <svg class="wordmark" viewBox="0 0 50 7" aria-hidden="true" focusable="false" shape-rendering="crispEdges">
+          <use href="assets/wordmark.svg#brand" fill="currentColor"/>
+          <use class="wordmark-accent" href="assets/wordmark.svg#accent"/>
+        </svg>
+      </a>
+      <div class="nav-controls">
+        <button class="nav-icon eclipse" id="theme-preference" type="button" role="switch" aria-checked="true" aria-label="حالت تیره" title="تغییر به حالت روشن">
+          <svg class="eclipse-face" viewBox="0 0 44 44" aria-hidden="true" focusable="false">
+            <defs>
+              <mask id="eclipse-cut" maskUnits="userSpaceOnUse" x="0" y="0" width="44" height="44">
+                <rect width="44" height="44" fill="white"/>
+                <circle class="eclipse-shadow" cx="27" cy="14" r="11" fill="black"/>
+              </mask>
+            </defs>
+            <g class="orbit-trail" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
+              <circle cx="22" cy="22" r="18" pathLength="100" stroke-width="1.4"/>
+              <circle cx="22" cy="22" r="15.5" pathLength="100" stroke-width=".75"/>
+            </g>
+            <g class="sun-rays" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
+              <path d="M22 4v4m0 28v4M4 22h4m28 0h4M9 9l3 3m20 20 3 3M9 35l3-3m20-20 3-3"/>
+            </g>
+            <circle cx="22" cy="22" r="11.5" fill="currentColor" mask="url(#eclipse-cut)"/>
+            <g class="night-stars" fill="currentColor">
+              <path d="m31 6 1.3 4 3.7 1.3-3.7 1.3L31 17l-1.4-4.4-3.7-1.3 3.7-1.3z"/>
+              <path d="M35 21h2.5v2.5H35zM9 8h2v2H9z"/>
+            </g>
+          </svg>
+        </button>
+        <button class="nav-icon language-icon" id="language-preference" type="button" aria-label="زبان فارسی؛ تغییر به انگلیسی" title="تغییر به انگلیسی">
+          <svg class="language-card latin-card" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <path class="bubble" d="M5 4h22v19h-6l-5 5v-5H5z"/>
+            <path class="letter" pathLength="1" d="m11.5 18 4.5-10 4.5 10m-7.5-3h6"/>
+          </svg>
+          <svg class="language-card persian-card" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <path class="bubble" d="M5 4h22v19h-6l-5 5v-5H5z"/>
+            <path class="letter" pathLength="1" d="M10 12v2q0 2 3 2h6q3 0 3-3v-2"/>
+            <path fill="currentColor" d="M13 18h2v2h-2zm4 0h2v2h-2zm-2 2.5h2v2h-2z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell" id="main-content" tabindex="-1">
+    <section class="intro">
+      <h1><span data-i18n>یه قیافه بگیر،</span> <em data-i18n>ببینم!</em></h1>
+      <p data-i18n>وب‌کم رو روشن کن یا یه عکس انتخاب کن تا حالت چهره‌ت رو حدس بزنم.</p>
+    </section>
+
+    <div class="panel workspace">
+      <section class="input-panel" aria-labelledby="input-title">
+        <header class="panel-head">
+          <h2 id="input-title" data-i18n>ورودی تصویر</h2>
+          <div class="source-options" aria-label="منبع تصویر" data-i18n-attr="aria-label" role="group">
+            <button id="camera-mode" type="button" aria-pressed="true" data-i18n>وب‌کم</button>
+            <button id="photo-mode" type="button" aria-pressed="false" data-i18n>عکس</button>
+          </div>
+        </header>
+        <div class="stage" id="stage">
+          <div class="preview" id="preview" hidden>
+            <video id="video" autoplay muted playsinline hidden aria-label="پیش‌نمایش وب‌کم" data-i18n-attr="aria-label"></video>
+            <img id="photo" hidden alt="تصویر ورودی" data-i18n-attr="alt">
+            <div class="framing-guide" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <div id="face-overlay" class="face-overlay" aria-hidden="true"></div>
+          </div>
+          <div class="placeholder" id="placeholder">
+            <canvas id="pixel-scene" class="pixel-scene" width="576" height="256" aria-hidden="true"></canvas>
+            <strong id="placeholder-title">تصویر چهره را وارد کنید</strong>
+            <p id="placeholder-text">وب‌کم را روشن کنید یا یک عکس انتخاب کنید.</p>
+          </div>
+        </div>
+        <div class="capture-tools">
+          <button class="scene-motion" id="motion-toggle" type="button" aria-pressed="false">توقف انیمیشن</button>
+          <div class="actions">
+            <button class="primary" id="camera-action" type="button">روشن کردن وب‌کم</button>
+            <button class="secondary" id="pick-photo" type="button" data-i18n>انتخاب عکس</button>
+            <input id="file-input" type="file" accept="image/*" hidden>
+          </div>
+          <div class="capture-feedback">
+            <p id="capture-feedback" data-tone="idle" role="status"><i aria-hidden="true"></i><span>برای نتیجهٔ بهتر، روبه‌روی دوربین و در نور ملایم باش.</span></p>
+            <a class="result-jump" id="result-jump" href="#result-title" hidden><span data-i18n>دیدن نتیجه</span> <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <p class="message" id="message" role="alert" hidden></p>
+        <div class="sample">
+          <img src="assets/astronaut.jpg" alt="" width="40" height="40">
+          <span><strong data-i18n>عکس نمونه</strong><small data-i18n>یک تصویر آماده برای امتحان کردن</small></span>
+          <button id="sample-action" type="button"><span data-i18n>امتحان کن</span> <span aria-hidden="true">↖</span></button>
+        </div>
+      </section>
+
+      <section class="result-panel" aria-labelledby="result-title">
+        <header class="panel-head">
+          <h2 id="result-title" tabindex="-1" data-i18n>نتیجهٔ تحلیل</h2>
+          <span id="face-count" class="count">در انتظار تصویر</span>
+        </header>
+        <div class="results-content">
+          <div class="faces" id="face-options" role="group" aria-label="انتخاب چهره" data-i18n-attr="aria-label" hidden></div>
+          <div class="dominant" id="dominant">
+            <canvas id="pixel-mood" class="pixel-mood" width="192" height="192" aria-hidden="true"></canvas>
+            <div class="dominant-label">
+              <small id="dominant-caption">حالت غالب</small>
+              <strong id="dominant-name">—</strong>
+              <span id="dominant-alternate" hidden></span>
+              <ul class="fusion-parts" id="fusion-parts" aria-label="اجزای حالت تلفیقی" data-i18n-attr="aria-label" hidden></ul>
+            </div>
+            <span class="dominant-score" id="dominant-score" dir="ltr" title="امتیاز مدل" data-i18n-attr="title">—</span>
+          </div>
+          <div class="mood-card" id="mood-card">
+            <span id="mood-symbol" class="mood-symbol" aria-hidden="true">✧</span>
+            <div class="mood-copy">
+              <small data-i18n>پیام گربه</small>
+              <p id="mood-text">یه عکس بده یا دوربین رو روشن کن تا شروع کنیم.</p>
+              <a id="mood-source" class="mood-source" target="_blank" rel="noopener noreferrer" hidden></a>
+            </div>
+            <button id="next-comment" class="quiet" type="button" hidden data-i18n>یه پیام دیگه</button>
+          </div>
+          <section id="playlist" class="playlist" aria-labelledby="playlist-title" hidden>
+            <div class="playlist-head">
+              <h3 id="playlist-title"><span aria-hidden="true">♫</span> <span data-i18n>پیشنهاد موسیقی</span></h3>
+              <button id="refresh-tracks" class="quiet" type="button"><span data-i18n>آهنگ‌های تازه</span> <span aria-hidden="true">↻</span></button>
+            </div>
+            <ul id="tracks" class="tracks"></ul>
+          </section>
+          <details class="score-details">
+            <summary data-i18n>امتیاز هر حالت</summary>
+            <ul id="scores" class="scores" aria-label="امتیاز حالت‌های چهره" data-i18n-attr="aria-label"></ul>
+            <p class="note" data-i18n>امتیازها برآورد مدل از حالت ظاهری چهره‌اند. احساس واقعی فرد ممکن است متفاوت باشد.</p>
+          </details>
+        </div>
+      </section>
+    </div>
+
+    <details class="history-panel">
+      <summary id="history-title"><span data-i18n>نتایج این جلسه</span><span id="history-count" class="history-count" hidden></span></summary>
+      <div class="history-body">
+        <p class="history-empty" id="history-empty" data-i18n>پس از تحلیل تصویر، نتیجه‌ها اینجا نمایش داده می‌شوند.</p>
+        <ol class="history" id="history" hidden></ol>
+        <div class="history-actions" id="history-actions" hidden>
+          <button class="quiet" id="clear-history" type="button" disabled data-i18n>پاک کردن</button>
+        </div>
+      </div>
+    </details>
+
+    <footer><span><i></i> <span data-i18n>عکس و ویدئو در همین مرورگر پردازش می‌شوند</span></span><span lang="en" dir="ltr">meowd me</span></footer>
+  </main>
+</body>
+</html>

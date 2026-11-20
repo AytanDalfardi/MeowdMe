@@ -1,0 +1,42 @@
+.welcome { display: grid; place-items: center; min-height: 100svh; padding: clamp(20px,5vw,72px); }
+.welcome-scene {
+  direction: ltr; display: grid; grid-template-columns: minmax(0, .95fr) minmax(0,1.25fr); align-items: center;
+  gap: clamp(28px,6vw,90px); width: min(100%, 980px);
+}
+.cat-portrait {
+  position: relative; aspect-ratio: 1; display: grid; place-items: center; isolation: isolate;
+  border: 3px solid #232138; border-radius: 18% 18% 18% 4%;
+  background: repeating-conic-gradient(#b0decf 0 25%, #bae6d8 0 50%) 0 0 / 22px 22px;
+  box-shadow: inset 0 0 0 6px #d2f2e5, 6px 7px 0 #564b70;
+}
+.cat-portrait::before, .cat-portrait::after {
+  content: ""; position: absolute; width: 6%; aspect-ratio: 1; background: #fff4c5;
+  clip-path: polygon(40% 0,60% 0,60% 30%,75% 30%,75% 40%,100% 40%,100% 60%,65% 60%,65% 75%,60% 75%,60% 100%,40% 100%,40% 65%,0 65%,0 40%,40% 40%);
+}
+.cat-portrait::before { left: 12%; top: 23%; }
+.cat-portrait::after { right: 12%; bottom: 21%; width: 4%; }
+.welcome-cat { position: relative; width: 71%; height: auto; image-rendering: pixelated; animation: bristle 780ms ease-out both; }
+@keyframes bristle { 0% { transform: translateY(8px); } 55% { transform: translateY(-4px); } 100% { transform: translateY(0); } }
+.cat-shadow { position: absolute; width: 52%; height: 7%; bottom: 13%; background: #3c695c44; border-radius: 50%; }
+.temper { position: absolute; right: 13%; top: 12%; width: 10%; transform: rotate(8deg); }
+.welcome-copy { text-align: start; direction: rtl; }
+:root[dir="ltr"] .welcome-copy { direction: ltr; }
+.welcome-copy h1 { width: min(100%, 510px); margin: 0 0 22px auto; color: var(--text); }
+:root[lang="en"] .welcome-copy h1 { margin-inline: 0 auto; }
+.welcome-copy .wordmark { filter: drop-shadow(3px 4px var(--pixel-shadow)); }
+.cat-line { margin: 0 0 26px; font-size: clamp(18px,2.3vw,27px); font-weight: 650; text-wrap: balance; }
+.enter-studio {
+  display: inline-flex; align-items: center; justify-content: center; gap: 22px; padding: 12px 20px;
+  min-height: 48px; background: var(--accent); color: var(--page); border-radius: 5px;
+  font-weight: 750; text-decoration: none; box-shadow: 3px 4px var(--pixel-shadow);
+}
+.enter-studio:hover { transform: translateY(-2px); }
+.enter-arrow { font: 22px/1 monospace; }
+:root[dir="ltr"] .enter-arrow { transform: rotate(180deg); }
+@media(max-width:650px) {
+  .welcome-scene { grid-template-columns: minmax(0,1fr); justify-items: center; gap: 30px; }
+  .cat-portrait { width: min(64vw,250px); }
+  .welcome-copy, .welcome-copy h1 { text-align: center; }
+  .welcome-copy h1 { width: min(76vw, 420px); margin: 0 auto 12px; }
+}
+.enter-studio { font-size: 18px; font-weight: 600; }
